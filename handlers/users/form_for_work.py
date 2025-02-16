@@ -2,10 +2,10 @@ from aiogram import types
 from loader import dp, bot
 from aiogram.dispatcher import FSMContext
 
+from data.config import ADMINS
 from states.work_place import ApplicationForWork
 
-# lambda message: message.text.strip().lower() == "💼work place🏢"
-@dp.message_handler(commands="work")
+@dp.message_handler(text="💼 Work  Place 🏢")
 async def work_place_handler(message: types.Message):
     text = "*You have choosed✅ a 💼 Work 🏢 Place*\n\n"
     text += "Now, answer to some questions📃 please.\n\n"
@@ -101,5 +101,9 @@ async def purpose_condition(message: types.Message, state: FSMContext):
     for label, key in fields:
         value = data.get(key, None)
         final_answer += f"{label}: {value}\n"
+    
+    for admin in ADMINS:
+        # if message.from_user.id != admin.id:
+        await bot.send_message(chat_id=admin, text=final_answer, parse_mode="Markdown")
 
-    await message.answer(text = final_answer)
+    await message.answer(text = final_answer, parse_mode="Markdown")
